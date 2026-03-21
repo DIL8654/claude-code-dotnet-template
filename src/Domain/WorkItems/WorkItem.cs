@@ -14,6 +14,7 @@ public sealed class WorkItem : AuditableEntity
         Description = description;
         CreatedUtc = createdUtc;
         Status = WorkItemStatus.Active;
+        RefreshRowVersion();
     }
 
     public string Title { get; private set; } = string.Empty;
@@ -43,17 +44,25 @@ public sealed class WorkItem : AuditableEntity
 
         Title = title.Trim();
         Touch(updatedUtc);
+        RefreshRowVersion();
     }
 
     public void UpdateDescription(string? description, DateTimeOffset updatedUtc)
     {
         Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
         Touch(updatedUtc);
+        RefreshRowVersion();
     }
 
     public void Complete(DateTimeOffset updatedUtc)
     {
         Status = WorkItemStatus.Completed;
         Touch(updatedUtc);
+        RefreshRowVersion();
+    }
+
+    private void RefreshRowVersion()
+    {
+        RowVersion = Guid.NewGuid().ToByteArray();
     }
 }

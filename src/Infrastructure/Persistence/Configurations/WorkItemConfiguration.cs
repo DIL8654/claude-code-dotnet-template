@@ -23,7 +23,8 @@ public sealed class WorkItemConfiguration : IEntityTypeConfiguration<WorkItem>
             .HasMaxLength(32);
 
         builder.Property(workItem => workItem.RowVersion)
-            .IsRowVersion();
+            .IsRequired()
+            .IsConcurrencyToken();
 
         builder.HasIndex(workItem => new { workItem.Status, workItem.CreatedUtc });
     }

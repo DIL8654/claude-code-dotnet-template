@@ -18,6 +18,7 @@ public sealed class GlobalExceptionHandler(
         };
 
         logger.LogError(exception, "Unhandled exception mapped to {StatusCode}", statusCode);
+        httpContext.Response.StatusCode = statusCode;
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {

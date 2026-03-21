@@ -13,7 +13,11 @@ public sealed class WorkItemsEndpointsTests(TestWebApplicationFactory factory) :
     {
         factory.EnsureDatabaseCreated();
         HttpClient client = factory.CreateClient();
-        CreateWorkItemHttpRequest request = new("Seed template", "Exercise starter path");
+        CreateWorkItemHttpRequest request = new()
+        {
+            Title = "Seed template",
+            Description = "Exercise starter path"
+        };
 
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/work-items", request);
 

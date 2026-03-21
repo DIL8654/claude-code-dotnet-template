@@ -40,6 +40,6 @@ public sealed class WorkItemsController(WorkItemService workItemService) : Contr
             new CreateWorkItemRequest(request.Title, request.Description),
             cancellationToken);
 
-        return CreatedAtAction(nameof(GetAsync), new { id = created.Id }, created);
+        return Created($"/api/v1/work-items/{created.Id}", created);
     }
 }
