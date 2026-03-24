@@ -1,4 +1,5 @@
 using Application.Abstractions;
+using Application.Tenants;
 using Application.WorkItems;
 using Infrastructure.Clock;
 using Infrastructure.Options;
@@ -34,8 +35,10 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
         services.AddScoped<IWorkItemRepository, WorkItemRepository>();
+        services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddSingleton<IClock, SystemClock>();
         services.AddScoped<WorkItemService>();
+        services.AddScoped<TenantService>();
 
         return services;
     }

@@ -1,4 +1,7 @@
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using WebApi.Authorization;
 using WebApi.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,20 @@ builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthorizationPolicies.CreateTenant, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.AddRequirements(new TenantManagerRequirement());
+    });
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, TenantManagerRequirementHandler>();
+
 WebApplication app = builder.Build();
 
 app.UseExceptionHandler();
@@ -29,6 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

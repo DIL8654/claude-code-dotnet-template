@@ -2,5 +2,5 @@ namespace Application.Abstractions;
 
 public interface IClock
 {
-    DateTimeOffset UtcNow { get; }
+    public DateTimeOffset UtcNow { get; }
 }
